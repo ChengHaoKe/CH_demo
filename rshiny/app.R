@@ -46,6 +46,8 @@ ui <- fluidPage(
                                                                 choices = list("Bar Plot", 'Pie Chart')),
                                                     br(),
                                                     plotlyOutput("oplot1", width = "100%", height = "500px"),
+                                                    br(),
+                                                    DT::dataTableOutput("plotdata"),
                                                     br()
                                      )),
                             tabPanel("Custom datasets",
@@ -82,6 +84,9 @@ ui <- fluidPage(
                                      verticalLayout(h5("Data Set Selection"),
                                                     verbatimTextOutput("ds11", placeholder = TRUE),
                                                     br(),
+                                                    selectInput("biv1", label = "Select tests to run",
+                                                                choices = list("Tests")),
+                                                    br(),
                                                     tableOutput('ttest')
                                      )),
                             tabPanel("Multivariate Analysis",
@@ -98,9 +103,9 @@ ui <- fluidPage(
 )
 
 # server.R ------------------------------------------------------------------------------------------------------------
-server <- function(input, output) {
+server <- function(input, output, session) {
   #-----------------------------------------Outputs--------------------------------------------------------------------
-  # Query choice ---------------method 1----------------------------------
+  # Query choice ----------------------------------------------------------
   
   output$ds1 <- renderText({
     if (input$select1 == 'Titanic') {
@@ -115,6 +120,26 @@ server <- function(input, output) {
       paste('Titanic')
     } else if (input$select2 == 'NYS schools') {
       paste('NYS schools')
+    }
+  })
+  
+  # ---------- Selection dynamic updates ---------------------------------
+  # https://shiny.rstudio.com/reference/shiny/latest/updateSelectInput.html
+  observe({
+    if (input$select2 == 'Titanic') {
+      choice0 <- c('Independent t-test', 'One-way analysis of variance (ANOVA)')
+      updateSelectInput(session, "biv1",
+                        label = "Select tests to run",
+                        choices = choice0,
+                        selected = head(choice0, 1)
+      )
+    } else if (input$select2 == 'NYS schools') {
+      choice0 <- c('One-way analysis of variance (ANOVA)', 'Pearson correlation test')
+      updateSelectInput(session, "biv1",
+                        label = "Select tests to run",
+                        choices = choice0,
+                        selected = head(choice0, 1)
+      )
     }
   })
   
@@ -204,8 +229,8 @@ server <- function(input, output) {
     df0
   })
   
-  #--------------------------------Barchart------------------------------------------------- 
-  fbar1 <- reactive({
+  #--------------------------------Barchart-------------------------------------------------
+  bardata <- reactive({
     df1 <- data0()
     
     if (input$select1 == 'Titanic') {
@@ -214,6 +239,26 @@ server <- function(input, output) {
       df3 <- dcast.data.table(df2, Pclass ~ Survived, value.var = 'Passengers', 
                               fun.aggregate = sum)
       colnames(df3) <- c('Pclass', 'Died', 'Survived')
+      
+    } else if (input$select1 == 'NYS schools') {
+      df2 <- as.data.table(df1)
+      df3 <- dcast.data.table(df2, county_name ~ year, value.var = 'total_enroll', 
+                              fun.aggregate = sum)
+      colnames(df3) <- c(c('county_name'), 
+                         paste("y", colnames(df3)[2:ncol(df3)], sep = "_"))
+    }
+    df3
+  })
+  
+  fbar1 <- reactive({
+    df3 <- as.data.table(bardata())
+    
+    if (input$select1 == 'Titanic') {
+      # df2 <- df1 %>% group_by(Pclass, Survived) %>% summarize(Passengers = n())
+      # df2 <- as.data.table(df2)
+      # df3 <- dcast.data.table(df2, Pclass ~ Survived, value.var = 'Passengers', 
+      #                         fun.aggregate = sum)
+      # colnames(df3) <- c('Pclass', 'Died', 'Survived')
       
       bar1 <- plot_ly()
       for (t in colnames(df3[,2:ncol(df3)])){
@@ -232,11 +277,11 @@ server <- function(input, output) {
                barmode = 'group')
       
     } else if (input$select1 == 'NYS schools') {
-      df2 <- as.data.table(df1)
-      df3 <- dcast.data.table(df2, county_name ~ year, value.var = 'total_enroll', 
-                              fun.aggregate = sum)
-      colnames(df3) <- c(c('county_name'), 
-                         paste("y", colnames(df3)[2:ncol(df3)], sep = "_"))
+      # df2 <- as.data.table(df1)
+      # df3 <- dcast.data.table(df2, county_name ~ year, value.var = 'total_enroll', 
+      #                         fun.aggregate = sum)
+      # colnames(df3) <- c(c('county_name'), 
+      #                    paste("y", colnames(df3)[2:ncol(df3)], sep = "_"))
       
       bar1 <- plot_ly()
       for (t in colnames(df3[,2:ncol(df3)])){
@@ -258,15 +303,39 @@ server <- function(input, output) {
   })
   
   #------------------------------Pie Chart----------------------------------------------
-  
-  fpie1 <- reactive({
+  piedata <- reactive({
     df1 <- data0()
+    
     if (input$select1 == 'Titanic') {
       df2 <- df1 %>% group_by(Pclass, Survived) %>% summarize(Passengers = n())
       df2 <- as.data.table(df2)
       df3 <- dcast.data.table(df2, Pclass ~ Survived, value.var = 'Passengers', 
                               fun.aggregate = sum)
       colnames(df3) <- c('Pclass', 'Died', 'Survived')
+      
+    } else if (input$select1 == 'NYS schools') {
+      df2 <- df1 %>% group_by(povlvl) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
+      df2 <- as.data.table(df2)
+      df4 <- df1 %>% group_by(year) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
+      df4 <- as.data.table(df4)
+      df2$group <- 'povlvl'
+      df4$group <- 'year'
+      
+      df3 <- rbind(df2, df4, fill=TRUE)
+    }
+    df3
+  })
+  
+  
+  fpie1 <- reactive({
+    df3 <- as.data.table(piedata())
+    
+    if (input$select1 == 'Titanic') {
+      # df2 <- df1 %>% group_by(Pclass, Survived) %>% summarize(Passengers = n())
+      # df2 <- as.data.table(df2)
+      # df3 <- dcast.data.table(df2, Pclass ~ Survived, value.var = 'Passengers', 
+      #                         fun.aggregate = sum)
+      # colnames(df3) <- c('Pclass', 'Died', 'Survived')
       
       # pie1 <- plot_ly(df3, labels = ~Pclass, values = ~Died, type = 'pie',
       #                 textposition = 'inside',
@@ -308,10 +377,12 @@ server <- function(input, output) {
                               margin = list(l = 100, r = 100, b = 100, t = 100))
       
     } else if (input$select1 == 'NYS schools') {
-      df2 <- df1 %>% group_by(povlvl) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
-      df2 <- as.data.table(df2)
-      df3 <- df1 %>% group_by(year) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
-      df3 <- as.data.table(df3)
+      # df2 <- df1 %>% group_by(povlvl) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
+      # df2 <- as.data.table(df2)
+      # df3 <- df1 %>% group_by(year) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
+      # df3 <- as.data.table(df3)
+      df2 <- df3[df3$group == 'povlvl']
+      df4 <- df3[df3$group == 'year']
       
       # pie1 <- plot_ly(df2, labels = ~povlvl, values = ~total_enroll, type = 'pie',
       #                 textposition = 'inside',
@@ -343,7 +414,7 @@ server <- function(input, output) {
       pie0 <- pie0 %>% add_pie(data = df2, labels = ~povlvl, values = ~total_enroll,
                              name = "Enrollment", domain = list(row = 0, column = 0),
                              title = list(text = 'Enrollment by county poverty level', size = 22))
-      pie0 <- pie0 %>% add_pie(data = df3, labels = ~year, values = ~total_enroll,
+      pie0 <- pie0 %>% add_pie(data = df4, labels = ~year, values = ~total_enroll,
                              name = "Enrollment", domain = list(row = 0, column = 1),
                              title = list(text = 'Enrollment by year', size = 22))
       pie0 <- pie0 %>% layout(title = 'Pie charts of enrollment numbers', showlegend = F,
@@ -377,6 +448,21 @@ server <- function(input, output) {
                                               value = 0.5, {df4 = fplot1()
                                               }))
   
+  output$plotdata <- DT::renderDataTable(
+    tryCatch({
+      if ("Bar Plot" %in% input$ptype1) {
+        datatable(bardata(), options = list(pageLength = 5), extensions = 'Responsive')
+        } else if ("Pie Chart" %in% input$ptype1) {
+        datatable(piedata(), options = list(pageLength = 5), extensions = 'Responsive')
+      }
+    }, error = function(e){
+      stat1 <- data.frame(message = paste("Whenever you select a different dataset,",
+                                          "please click the submit button again to", 
+                                          "render the results!"))
+      datatable(stat1, options = list(pageLength = 5), extensions = 'Responsive')
+    })
+  )
+  
   
   
   # ====================== Statistical analysis ========================================
@@ -385,32 +471,55 @@ server <- function(input, output) {
       df1 <- as.data.table(data1())
       
       if (input$select2 == 'Titanic') {
-        df1 <- na.omit(df1[, c('Survived', 'Age')])
-        lv0 <- leveneTest(df1$Age, factor(df1$Survived))
-        if (lv0$`Pr(>F)`[1] < 0.05) {
-          t.test(df1$Age ~ factor(df1$Survived), var.equal = FALSE)
-        } else {
-          tt0 <- t.test(df1$Age ~ factor(df1$Survived), var.equal = TRUE)
+        if (input$biv1 == 'Independent t-test') {
+          df1 <- na.omit(df1[, c('Survived', 'Age')])
+          lv0 <- leveneTest(df1$Age, factor(df1$Survived))
+          if (lv0$`Pr(>F)`[1] < 0.05) {
+            t.test(df1$Age ~ factor(df1$Survived), var.equal = FALSE)
+          } else {
+            tt0 <- t.test(df1$Age ~ factor(df1$Survived), var.equal = TRUE)
+          }
+          lvdf <- data.frame(variables = "Survival and Age",
+                             test = "Levene's test for homogeneity of variance", 
+                             statistic = lv0$`F value`[1], pvalue = lv0$`Pr(>F)`[1])
+          ttdf <- data.frame(variables = "",
+                             test = "Independent t-test",
+                             statistic = tt0$statistic, 
+                             pvalue = tt0$p.value)
+          stat1 <- rbind(lvdf, ttdf)
+          
+        } else if (input$biv1 == 'One-way analysis of variance (ANOVA)') {
+          df1 <- na.omit(df1[, c('Pclass', 'Age')])
+          an0 <- aov(Age ~ Pclass, data = df1)
+          an1 <- summary(an0)
+          stat1 <- data.frame(an1[[1]])
+          befcol <- colnames(stat1)
+          stat1$variables <- c('Passenger class and age', '')
+          stat1 <- stat1[, c('variables', befcol)]
         }
-        lvdf <- data.frame(variables = "Survival and Age",
-                           test = "Levene's test for homogeneity of variance", 
-                           statistic = lv0$`F value`[1], pvalue = lv0$`Pr(>F)`[1])
-        ttdf <- data.frame(variables = "",
-                           test = "Independent t-test",
-                           statistic = tt0$statistic, 
-                           pvalue = tt0$p.value)
-        stat1 <- rbind(lvdf, ttdf)
         
       } else if (input$select2 == 'NYS schools') {
-        df2 <- df1 %>% group_by(county_name, povlvl) %>% 
-          summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
-        df2 <- as.data.table(df2)
-        an0 <- aov(total_enroll ~ povlvl, data = df2)
-        an1 <- summary(an0)
-        stat1 <- data.frame(an1[[1]])
-        befcol <- colnames(stat1)
-        stat1$variables <- c('Total enrollment and county poverty level', '')
-        stat1 <- stat1[, c('variables', befcol)]
+        if (input$biv1 == 'One-way analysis of variance (ANOVA)') {
+          df2 <- df1 %>% group_by(county_name, povlvl) %>% 
+            summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
+          df2 <- as.data.table(df2)
+          an0 <- aov(total_enroll ~ povlvl, data = df2)
+          an1 <- summary(an0)
+          stat1 <- data.frame(an1[[1]])
+          befcol <- colnames(stat1)
+          stat1$variables <- c('Total enrollment and county poverty level', '')
+          stat1 <- stat1[, c('variables', befcol)]
+          
+        } else if (input$biv1 == 'Pearson correlation test') {
+          df2 <- df1 %>% group_by(county_name) %>% 
+            summarize(total_enroll = sum(total_enroll, na.rm = TRUE),
+                      median_household_income = mean(median_household_income, na.rm = TRUE))
+          df2 <- as.data.table(df2)
+          cor0 <- cor.test(df2$total_enroll, df2$median_household_income, method = "pearson")
+          stat1 <- data.frame(variables = "Total enrollment and average median household income across years",
+                              statistic = cor0$estimate, pvalue = cor0$p.value)
+        }
+        
       }
       
       return(stat1)
