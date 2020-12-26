@@ -222,7 +222,7 @@ server <- function(input, output) {
                     name = t, type = "bar")
       }
       bar1 %>% 
-        layout(title = list(text = "Survival by class", size = 22),
+        plotly::layout(title = list(text = "Survival by class", size = 22),
                xaxis = list(title = "Passenger Class", 
                             titlefont = list(size = 16)),
                yaxis = list(title = "Number of passengers", 
@@ -245,7 +245,7 @@ server <- function(input, output) {
                     name = t, type = "bar")
       }
       bar1 %>% 
-        layout(title = list(text = "Total Enrollment by year by county", size = 22),
+        plotly::layout(title = list(text = "Total Enrollment by year by county", size = 22),
                xaxis = list(title = "County", 
                             titlefont = list(size = 16)),
                yaxis = list(title = "Total Enrollment", 
@@ -268,31 +268,44 @@ server <- function(input, output) {
                               fun.aggregate = sum)
       colnames(df3) <- c('Pclass', 'Died', 'Survived')
       
-      pie1 <- plot_ly(df3, labels = ~Pclass, values = ~Died, type = 'pie',
-                      textposition = 'inside',
-                      textinfo = 'label+percent',
-                      insidetextfont = list(color = '#FFFFFF'),
-                      hoverinfo = 'text',
-                      text = ~paste(Pclass, ':', Died, '(Passengers)'),
-                      marker = list(line = list(color = '#FFFFFF', width = 1)),
-                      showlegend = FALSE) %>%
-        layout(title = 'Died passengers by class',
-               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               margin = list(l = 100, r = 100, b = 100, t = 100))
-      
-      pie2 <- plot_ly(df3, labels = ~Pclass, values = ~Survived, type = 'pie',
-                      textposition = 'inside',
-                      textinfo = 'label+percent',
-                      insidetextfont = list(color = '#FFFFFF'),
-                      hoverinfo = 'text',
-                      text = ~paste(Pclass, ':', Survived, '(Passengers)'),
-                      marker = list(line = list(color = '#FFFFFF', width = 1)),
-                      showlegend = FALSE) %>%
-        layout(title = 'Survived passengers by class',
-               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               margin = list(l = 100, r = 100, b = 100, t = 100))
+      # pie1 <- plot_ly(df3, labels = ~Pclass, values = ~Died, type = 'pie',
+      #                 textposition = 'inside',
+      #                 textinfo = 'label+percent',
+      #                 insidetextfont = list(color = '#FFFFFF'),
+      #                 hoverinfo = 'text',
+      #                 text = ~paste(Pclass, ':', Died, '(Passengers)'),
+      #                 marker = list(line = list(color = '#FFFFFF', width = 1)),
+      #                 showlegend = FALSE) %>%
+      #   plotly::layout(title = 'Died passengers by class',
+      #          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          margin = list(l = 100, r = 100, b = 100, t = 100))
+      # 
+      # pie2 <- plot_ly(df3, labels = ~Pclass, values = ~Survived, type = 'pie',
+      #                 textposition = 'inside',
+      #                 textinfo = 'label+percent',
+      #                 insidetextfont = list(color = '#FFFFFF'),
+      #                 hoverinfo = 'text',
+      #                 text = ~paste(Pclass, ':', Survived, '(Passengers)'),
+      #                 marker = list(line = list(color = '#FFFFFF', width = 1)),
+      #                 showlegend = FALSE) %>%
+      #   plotly::layout(title = 'Survived passengers by class',
+      #          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          margin = list(l = 100, r = 100, b = 100, t = 100))
+      # pies <- plotly::subplot(list(pie1, pie2), nrows = 1)
+      pie0 <- plot_ly()
+      pie0 <- pie0 %>% add_pie(data = df3, labels = ~Pclass, values = ~Died,
+                               name = "Passengers", domain = list(row = 0, column = 0),
+                               title = list(text = 'Died passengers by class', size = 22))
+      pie0 <- pie0 %>% add_pie(data = df3, labels = ~Pclass, values = ~Survived,
+                               name = "Passengers", domain = list(row = 0, column = 1),
+                               title = list(text = 'Survived passengers by class', size = 22))
+      pie0 <- pie0 %>% layout(title = 'Pie charts of passenger status by class', showlegend = F,
+                              grid=list(rows=1, columns=2),
+                              xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                              yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                              margin = list(l = 100, r = 100, b = 100, t = 100))
       
     } else if (input$select1 == 'NYS schools') {
       df2 <- df1 %>% group_by(povlvl) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
@@ -300,34 +313,47 @@ server <- function(input, output) {
       df3 <- df1 %>% group_by(year) %>% summarize(total_enroll = sum(total_enroll, na.rm = TRUE))
       df3 <- as.data.table(df3)
       
-      pie1 <- plot_ly(df2, labels = ~povlvl, values = ~total_enroll, type = 'pie',
-                      textposition = 'inside',
-                      textinfo = 'label+percent',
-                      insidetextfont = list(color = '#FFFFFF'),
-                      hoverinfo = 'text',
-                      text = ~paste(povlvl, ':', total_enroll, '(Enrollment)'),
-                      marker = list(line = list(color = '#FFFFFF', width = 1)),
-                      showlegend = FALSE) %>%
-        layout(title = 'Enrollment by county poverty level',
-               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               margin = list(l = 100, r = 100, b = 100, t = 100))
+      # pie1 <- plot_ly(df2, labels = ~povlvl, values = ~total_enroll, type = 'pie',
+      #                 textposition = 'inside',
+      #                 textinfo = 'label+percent',
+      #                 insidetextfont = list(color = '#FFFFFF'),
+      #                 hoverinfo = 'text',
+      #                 text = ~paste(povlvl, ':', total_enroll, '(Enrollment)'),
+      #                 marker = list(line = list(color = '#FFFFFF', width = 1)),
+      #                 showlegend = FALSE) %>%
+      #   plotly::layout(title = 'Enrollment by county poverty level',
+      #          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          margin = list(l = 100, r = 100, b = 100, t = 100))
+      # 
+      # pie2 <- plot_ly(df3, labels = ~year, values = ~total_enroll, type = 'pie',
+      #                 textposition = 'inside',
+      #                 textinfo = 'label+percent',
+      #                 insidetextfont = list(color = '#FFFFFF'),
+      #                 hoverinfo = 'text',
+      #                 text = ~paste(year, ':', total_enroll, '(Enrollment)'),
+      #                 marker = list(line = list(color = '#FFFFFF', width = 1)),
+      #                 showlegend = FALSE) %>%
+      #   plotly::layout(title = 'Enrollment by year',
+      #          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+      #          margin = list(l = 100, r = 100, b = 100, t = 100))
       
-      pie2 <- plot_ly(df3, labels = ~year, values = ~total_enroll, type = 'pie',
-                      textposition = 'inside',
-                      textinfo = 'label+percent',
-                      insidetextfont = list(color = '#FFFFFF'),
-                      hoverinfo = 'text',
-                      text = ~paste(year, ':', total_enroll, '(Enrollment)'),
-                      marker = list(line = list(color = '#FFFFFF', width = 1)),
-                      showlegend = FALSE) %>%
-        layout(title = 'Enrollment by year',
-               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-               margin = list(l = 100, r = 100, b = 100, t = 100))
+      pie0 <- plot_ly()
+      pie0 <- pie0 %>% add_pie(data = df2, labels = ~povlvl, values = ~total_enroll,
+                             name = "Enrollment", domain = list(row = 0, column = 0),
+                             title = list(text = 'Enrollment by county poverty level', size = 22))
+      pie0 <- pie0 %>% add_pie(data = df3, labels = ~year, values = ~total_enroll,
+                             name = "Enrollment", domain = list(row = 0, column = 1),
+                             title = list(text = 'Enrollment by year', size = 22))
+      pie0 <- pie0 %>% layout(title = 'Pie charts of enrollment numbers', showlegend = F,
+                            grid=list(rows=1, columns=2),
+                            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                            margin = list(l = 100, r = 100, b = 100, t = 100))
     }
-  
-    subplot(pie1, pie2)
+    
+    # pies <- plotly::subplot(list(pie1, pie2), nrows = 1)
   })
   
   #output according to select input-----------------------------------------------------
@@ -338,7 +364,7 @@ server <- function(input, output) {
       }, error = function(e){
         placeh <- plotly_empty(type = "scatter", mode = "markers") %>%
           config(displayModeBar = FALSE) %>%
-          layout(title = 
+          plotly::layout(title = 
                    list(text = paste("Whenever you select a different dataset,",
                                      "please click the submit button again to", 
                                      "render the results!"), 

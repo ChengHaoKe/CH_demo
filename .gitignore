@@ -2,3 +2,5 @@
 .Rproj.user
 *rshiny.Rproj
 *.Rhistory
+.idea/*
+*CH_demo.Rproj
