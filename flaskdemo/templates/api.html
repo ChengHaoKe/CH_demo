@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Add CSS style sheets-->
+        <link rel="stylesheet" type= "text/css" href="{{url_for('static', filename='css/home.css')}}">
+        <title>
+            Flask html test
+        </title>
+        <!-- Add javascript code -->
+        <script type="text/javascript" src="{{url_for('static', filename='js/home.js')}}">
+        </script>
+    </head>
+    <body>
+        <button onclick="whitedark()">Toggle dark mode</button>
+        <header>
+          <div class="container">
+            <h1 class="logo">API Demo</h1>
+            <strong><nav>
+              <ul class="menu">
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li><a href="{{url_for('crawler')}}">Web Crawler</a></li>
+                <li><a href="{{url_for('puzzle')}}">Mini Puzzles</a></li>
+                <li><a href="{{url_for('ml')}}">Machine Learning</a></li>
+              </ul>
+            </nav></strong>
+          </div>
+        </header>
+        <br>
+        <form method="POST">
+            <h3>
+                 Please insert your API key
+            </h3>
+            <input type="text" name="text0" placeholder=""/>
+            <input type="submit" value="Start Search"/>
+            <br>
+            <p>{{apihdr}}</p>
+            <p>{{apiurl}}</p>
+        </form>
+    </body>
+</html>

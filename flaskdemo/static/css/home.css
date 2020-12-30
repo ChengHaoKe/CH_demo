@@ -1,0 +1,47 @@
+body {
+  width: 99%;
+  background-color: white;
+  color: black;
+}
+
+.dark-mode {
+  background-color: black;
+  color: white;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: 45%;
+  width: 10%;
+  height: 10%;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    border: 0 solid;
+    /* to stop table auto-adjusting if row content too long */
+    white-space: nowrap;
+}
+
+td {
+    padding: 0 10px 0 0;
+}
+
+/* to stop table auto-adjusting width if row content too long */
+td:last-child{
+    width:50%;
+}
+
+h2 {
+    text-align:center;
+}
+
+/*.homeheader img {*/
+/*  position: relative;*/
+/*}*/
+
+.homeheader h1 {
+  float: left;
+}

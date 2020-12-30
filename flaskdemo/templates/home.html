@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Add CSS style sheets-->
+        <link rel="stylesheet" type= "text/css" href="{{url_for('static', filename='css/home.css')}}">
+        <title>
+            Flask html test
+        </title>
+        <!-- Add javascript code -->
+        <script type="text/javascript" src="{{url_for('static', filename='js/home.js')}}">
+        </script>
+    </head>
+    <body>
+        <button onclick="whitedark()">Toggle dark mode</button>
+        <header>
+          <div class="homeheader">
+            <h1 class="logo">CH Python Demo</h1>
+            <img src="https://avatars0.githubusercontent.com/u/41141849?s=460&u=608357d2be147131b28f4e3ce8dbd8433e878c65&v=4"
+                 alt="CH" class="center">
+          </div>
+        </header>
+        <br>
+        <br>
+        <br>
+         <form action="https://github.com/ChengHaoKe">
+             <h2>
+                 CH Demo Menu
+             </h2>
+             <!-- Table codes -->
+             <table>
+                 <tr>
+                     <td>
+                         <br>
+                         <span class="demo1">API:</span>
+                         <br>
+                     </td>
+                     <td>
+                         <br>
+                         <button type="button" onclick="window.location.href='{{url_for('api')}}'">
+                             Open API Demo
+                         </button>
+                         <br>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td>
+                         <br>
+                         <span class="demo1">Web Crawler:</span>
+                         <br>
+                     </td>
+                     <td>
+                         <br>
+                         <button type="button" onclick="window.location.href='{{url_for('crawler')}}'">
+                             Open Crawler Demo
+                         </button>
+                         <br>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td>
+                         <br>
+                         <span class="demo2">Mini Puzzles:</span>
+                         <br>
+                     </td>
+                     <td>
+                         <br>
+                         <button type="button" onclick="window.location.href='{{url_for('puzzle')}}'">
+                             Open Mini Puzzle Demos
+                         </button>
+                         <br>
+                     </td>
+                 </tr>
+                 <tr>
+                     <td>
+                         <br>
+                         <span class="demo3">Machine Learning:</span>
+                         <br>
+                     </td>
+                     <td>
+                         <br>
+                         <button type="button" onclick="window.location.href='{{url_for('ml')}}'">
+                             Open Machine Learning Demo
+                         </button>
+                         <br>
+                     </td>
+                 </tr>
+             </table>
+         </form>
+    </body>
+</html>

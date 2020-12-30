@@ -4,3 +4,5 @@
 *.Rhistory
 .idea/*
 *CH_demo.Rproj
+flaskdemo/.idea/*
+rshinydemo/rsconnect/*
