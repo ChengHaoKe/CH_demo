@@ -7,7 +7,7 @@
             Flask html test
         </title>
         <!-- Add javascript code -->
-        <script type="text/javascript" src="{{url_for('static', filename='js/home.js')}}">
+        <script type="text/javascript" src="{{url_for('static', filename='js/api.js')}}">
         </script>
     </head>
     <body>
@@ -28,13 +28,45 @@
         <br>
         <form method="POST">
             <h3>
-                 Please insert your API key
+                 Please insert weather search parameters here
             </h3>
-            <input type="text" name="text0" placeholder=""/>
-            <input type="submit" value="Start Search"/>
-            <br>
-            <p>{{apihdr}}</p>
-            <p>{{apiurl}}</p>
+            <!-- Table codes -->
+            <table>
+                <tr>
+                    <td>API Key: </td>
+                    <td><input type="text" name="key0" id="key0" placeholder="" onclick="keyf();"/></td>
+                    <td><span id="key1">Key: </span></td>
+                </tr>
+                <tr>
+                    <td>Country Code: </td>
+                    <td><input type="text" name="where0" id="where0" value="TW" onclick="wheref();"/></td>
+                    <td><span id="where1">Code: </span></td>
+                </tr>
+                <tr>
+                    <td>Start date: </td>
+                    <td><input type="text" name="start0" value="2020-10-01" onblur="sday();"/></td>
+                    <td><span id="start1"></span></td>
+                </tr>
+                <tr>
+                    <td>End date: </td>
+                    <td><input type="text" name="end0" value="2020-10-31" onblur="eday();"/></td>
+                    <td><span id="end1"></span></td>
+                </tr>
+                <tr>
+                    <td>Type: </td>
+                    <select name='plt0' id="plt0" onclick="itype();">
+                        <option value="min">Minimum Temperatures</option>
+                        <option value="max">Maximum Temperatures</option>
+                        <option value="avg">Average Temperatures</option>
+                    </select>
+                    <td><span id="plt1">Selection: Minimum Temperatures</span></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <!-- button -->
+                    <td colspan="2"><input type="submit" value="Start Search"/></td>
+                </tr>
+            </table>
         </form>
     </body>
 </html>

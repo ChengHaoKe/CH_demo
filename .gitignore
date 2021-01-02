@@ -6,3 +6,4 @@
 *CH_demo.Rproj
 flaskdemo/.idea/*
 rshinydemo/rsconnect/*
+flaskdemo/app/__pycache__/*

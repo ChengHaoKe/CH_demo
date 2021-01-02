@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from app import api
 
 
 app = Flask(__name__)
@@ -13,7 +14,9 @@ def home():
 
 @app.route("/api/", methods=['GET', 'POST'])
 def api():
-    key0 = request.form.get('text0')
+    key0 = request.form.get('key0')
+    where = request.form.get('where')
+    end0 = request.form.get('end0')
     if key0 is not None:
         apihdr = {'x-api-key': key0}
         apiurl = 'https://api.meteostat.net/v2/stations/daily?station={0}&start={1}&end={2}'
