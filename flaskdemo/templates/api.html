@@ -30,43 +30,54 @@
             <h3>
                  Please insert weather search parameters here
             </h3>
+            <p>If you do not have an API key, please visit https://dev.meteostat.net/api/#api-key to get one (It's free)</p>
             <!-- Table codes -->
             <table>
                 <tr>
-                    <td>API Key: </td>
-                    <td><input type="text" name="key0" id="key0" placeholder="" onclick="keyf();"/></td>
+                    <td><span>API Key: </span></td>
+                    <td><input type="text" name="key0" id="key0" placeholder="" onload="keyf();" oninput="keyf();" onclick="keyf();"/></td>
                     <td><span id="key1">Key: </span></td>
                 </tr>
                 <tr>
-                    <td>Country Code: </td>
-                    <td><input type="text" name="where0" id="where0" value="TW" onclick="wheref();"/></td>
+                    <td><span>Country Code: (e.g. CA, JP, TW)</span></td>
+                    <td><input type="text" name="where0" id="where0" value="TW" onload="wheref();" oninput="wheref();" onclick="wheref();"/></td>
                     <td><span id="where1">Code: </span></td>
                 </tr>
                 <tr>
-                    <td>Start date: </td>
-                    <td><input type="text" name="start0" value="2020-10-01" onblur="sday();"/></td>
+                    <td><span>Start date: </span></td>
+                    <td><input type="text" name="start0" id="start0" value="2020-10-01" onload="sday();" oninput="sday();" onclick="sday();"/></td>
                     <td><span id="start1"></span></td>
                 </tr>
                 <tr>
-                    <td>End date: </td>
-                    <td><input type="text" name="end0" value="2020-10-31" onblur="eday();"/></td>
+                    <td><span>End date: </span></td>
+                    <td><input type="text" name="end0" id="end0" value="2020-10-31" onload="eday();" oninput="eday();" onclick="eday();"/></td>
                     <td><span id="end1"></span></td>
                 </tr>
                 <tr>
-                    <td>Type: </td>
-                    <select name='plt0' id="plt0" onclick="itype();">
+                    <td><span>Type: </span></td>
+                    <td><select name='plt0' id="plt0" onchange="itype();">
                         <option value="min">Minimum Temperatures</option>
                         <option value="max">Maximum Temperatures</option>
                         <option value="avg">Average Temperatures</option>
-                    </select>
+                    </select></td>
                     <td><span id="plt1">Selection: Minimum Temperatures</span></td>
                 </tr>
                 <tr>
                     <td></td>
                     <!-- button -->
-                    <td colspan="2"><input type="submit" value="Start Search"/></td>
+                    <td colspan="2">
+                        <br>
+                        <input type="submit" value="Start Search" onclick="return query0();"/>
+                    </td>
                 </tr>
             </table>
         </form>
+        <br>
+        <img src="{{image0}}" id="image1" alt="Daily weather">
+        <br>
+        <button onclick="vanish();">See Sample Plot</button>
+        <br>
+        <img src="{{url_for('static', filename='images/ch_tw_temp.png')}}" id="image2" alt="Daily weather">
+        <br>
     </body>
 </html>

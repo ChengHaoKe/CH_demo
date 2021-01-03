@@ -2,11 +2,13 @@ import requests
 import json
 import gzip
 from datetime import datetime, timedelta
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
 import base64
+import time
+# from os.path import join, dirname, realpath
 
 
 class apidemo:
@@ -29,6 +31,8 @@ class apidemo:
         self.sturl = 'https://bulk.meteostat.net/stations/stations.json.gz'
         self.start = st0.strftime('%Y-%m-%d')
         self.end = ed0.strftime('%Y-%m-%d')
+
+        # self.image0 = join(dirname(realpath(__file__)), 'static/images/ch_tw_temp.png')
 
     def stations(self):
         stat0 = json.loads(gzip.decompress(requests.get(self.sturl).content))
@@ -70,26 +74,31 @@ class apidemo:
                 except (TypeError, json.decoder.JSONDecodeError):
                     # if there are no values or if the json is empty then just skip
                     continue
+            time.sleep(0.1)
 
-        fig = Figure()
+        fig = Figure(figsize=(19, 10))
         ax = fig.add_subplot(1, 1, 1)
         for s1 in d0.keys():
-            if self.plt in ['min', 'MIN', 'Min', 'minimum']:
-                yvar = [j['tmin'] for j in d0[s1]]
-            elif self.plt in ['max', 'MAX', 'Max', 'maximum']:
-                yvar = [j['tmax'] for j in d0[s1]]
-            else:
-                yvar = [j['tavg'] for j in d0[s1]]
-            # plt.plot([j['date'] for j in d0[s1]], yvar, label=s1)
-            # plt.xticks(rotation=45)
-            ax.plot([j['date'] for j in d0[s1]], yvar, label=s1)
-            ax.tick_params(axis='x', rotation=45)
-        ax.set_title("title")
-        ax.set_xlabel("x-axis")
-        ax.set_ylabel("y-axis")
+            if d0[s1] is not None:
+                if self.plt in ['min', 'MIN', 'Min', 'minimum']:
+                    yvar = [j['tmin'] for j in d0[s1]]
+                elif self.plt in ['max', 'MAX', 'Max', 'maximum']:
+                    yvar = [j['tmax'] for j in d0[s1]]
+                else:
+                    yvar = [j['tavg'] for j in d0[s1]]
+                # plt.plot([j['date'] for j in d0[s1]], yvar, label=s1)
+                # plt.xticks(rotation=45)
+                ax.plot([j['date'] for j in d0[s1]], yvar, label=s1)
+                ax.tick_params(axis='x', rotation=45)
+
+        ax.set_title('Daily temperature for locations in ' + self.where)
+        # ax.set_xlabel("x-axis")
+        # ax.set_ylabel("y-axis")
         ax.legend()
         # plt.title('Daily temperature for locations in ' + self.where)
         # plt.legend()
+        # plt.show()
+        fig.tight_layout()
 
         # Convert plot to PNG image
         png0 = io.BytesIO()
@@ -101,3 +110,13 @@ class apidemo:
 
         return sb64
 
+
+def default(ipath='static/images/ch_tw_temp.png'):
+    with open(ipath, "rb") as image1:
+        sb64 = base64.b64encode(image1.read()).decode('utf8')
+        return sb64
+
+
+if __name__ == '__main__':
+    # sb64 = apidemo(key='', where='NO').getall()
+    pass
