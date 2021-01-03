@@ -73,7 +73,7 @@ function eday()
 function itype()
 {
     var input0 = document.getElementById("plt0").value;
-    document.getElementById("plt1").innerHTML = "Selected " + input0
+    document.getElementById("plt1").innerHTML = "Selection: " + input0 + " temperatures"
 }
 
 

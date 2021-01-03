@@ -2,7 +2,7 @@ import requests
 import json
 import gzip
 from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
@@ -22,11 +22,11 @@ class apidemo:
 
         st0 = datetime.strptime(start, '%Y-%m-%d')
         ed0 = datetime.strptime(end, '%Y-%m-%d')
-        if (ed0 - st0).days > 30:
-            ed0 = st0 + timedelta(days=30)
+        if (ed0 - st0).days > 60:
+            ed0 = st0 + timedelta(days=60)
         if ed0 > datetime.today():
             ed0 = datetime.today() - timedelta(days=1)
-            st0 = ed0 - timedelta(days=30)
+            st0 = ed0 - timedelta(days=60)
 
         self.sturl = 'https://bulk.meteostat.net/stations/stations.json.gz'
         self.start = st0.strftime('%Y-%m-%d')
@@ -74,7 +74,7 @@ class apidemo:
                 except (TypeError, json.decoder.JSONDecodeError):
                     # if there are no values or if the json is empty then just skip
                     continue
-            time.sleep(0.1)
+            time.sleep(0.2)
 
         fig = Figure(figsize=(19, 10))
         ax = fig.add_subplot(1, 1, 1)

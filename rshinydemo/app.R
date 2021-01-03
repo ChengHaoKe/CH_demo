@@ -18,6 +18,9 @@ options(shiny.trace=TRUE, shiny.error = TRUE)
 # ui.R ------------------------------------------------------------------------------------------------------------
 ui <- fluidPage(
   shinyjs::useShinyjs(),
+  titlePanel(title = 
+               div(img(src = "https://avatars0.githubusercontent.com/u/41141849?s=460&u=608357d2be147131b28f4e3ce8dbd8433e878c65&v=4", 
+                             height='5%',width='5%'))),
   navbarPage("CH's R Shiny Demo",
              tabPanel('Visualizations',
                       pageWithSidebar(

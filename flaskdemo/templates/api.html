@@ -30,28 +30,31 @@
             <h3>
                  Please insert weather search parameters here
             </h3>
-            <p>If you do not have an API key, please visit https://dev.meteostat.net/api/#api-key to get one (It's free)</p>
+            <p>If you do not have an API key, please visit
+                <a href='https://dev.meteostat.net/api/#api-key'>meteostat</a> to get one (It's free)</p>
+            <p>This program only allows for a maximum query of 60 days! If the date range given is larger, it will default to 60 days.</p>
+            <br>
             <!-- Table codes -->
             <table>
                 <tr>
                     <td><span>API Key: </span></td>
                     <td><input type="text" name="key0" id="key0" placeholder="" onload="keyf();" oninput="keyf();" onclick="keyf();"/></td>
-                    <td><span id="key1">Key: </span></td>
+                    <td><span id="key1" style="color:red;">Key: </span></td>
                 </tr>
                 <tr>
                     <td><span>Country Code: (e.g. CA, JP, TW)</span></td>
                     <td><input type="text" name="where0" id="where0" value="TW" onload="wheref();" oninput="wheref();" onclick="wheref();"/></td>
-                    <td><span id="where1">Code: </span></td>
+                    <td><span id="where1" style="color:green;">Valid Input</span></td>
                 </tr>
                 <tr>
                     <td><span>Start date: </span></td>
                     <td><input type="text" name="start0" id="start0" value="2020-10-01" onload="sday();" oninput="sday();" onclick="sday();"/></td>
-                    <td><span id="start1"></span></td>
+                    <td><span id="start1" style="color:green;">Valid Input</span></td>
                 </tr>
                 <tr>
                     <td><span>End date: </span></td>
                     <td><input type="text" name="end0" id="end0" value="2020-10-31" onload="eday();" oninput="eday();" onclick="eday();"/></td>
-                    <td><span id="end1"></span></td>
+                    <td><span id="end1" style="color:green;">Valid Input</span></td>
                 </tr>
                 <tr>
                     <td><span>Type: </span></td>
@@ -60,7 +63,7 @@
                         <option value="max">Maximum Temperatures</option>
                         <option value="avg">Average Temperatures</option>
                     </select></td>
-                    <td><span id="plt1">Selection: Minimum Temperatures</span></td>
+                    <td><span id="plt1">Selection: min temperatures</span></td>
                 </tr>
                 <tr>
                     <td></td>
