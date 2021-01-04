@@ -74,7 +74,7 @@ class apidemo:
                 except (TypeError, json.decoder.JSONDecodeError):
                     # if there are no values or if the json is empty then just skip
                     continue
-            time.sleep(0.2)
+            time.sleep(0.1)
 
         fig = Figure(figsize=(19, 10))
         ax = fig.add_subplot(1, 1, 1)
