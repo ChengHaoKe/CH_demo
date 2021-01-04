@@ -3,6 +3,9 @@ from selenium import webdriver
 from os.path import expanduser as ep
 # import requests
 
+# https://github.com/pyronlaboratory/heroku-integrated-firefox-geckodriver
+# https://github.com/mozilla/geckodriver/releases
+
 
 class webcrawler:
     def __init__(self, driver):

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from app import apiclass as apic
 from os.path import join, dirname, realpath
+# https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f
 
 
 app = Flask(__name__)
