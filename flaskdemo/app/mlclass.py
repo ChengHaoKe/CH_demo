@@ -3,6 +3,7 @@ import os
 
 # remove warning for cpu
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+# https://keras.io/api/datasets/
 
 # define functions because pycharm doesn't locate them
 Dense = tf.keras.layers.Dense

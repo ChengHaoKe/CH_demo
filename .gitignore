@@ -7,3 +7,4 @@
 flaskdemo/.idea/*
 rshinydemo/rsconnect/*
 flaskdemo/app/__pycache__/*
+flaskdemo/geckodriver.log
