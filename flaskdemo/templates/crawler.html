@@ -32,6 +32,12 @@
             </h3>
             <p>This data is used in <a href='https://chenghaoke.shinyapps.io/rshiny/'>CH's R Shiny Demo</a></p>
             <input type="submit" value="Start Crawler"/>
+            <br>
+            <br>
+            {% for table in tables %}
+                {{ table|safe }}
+            {% endfor %}
+            <br>
         </form>
     </body>
 </html>

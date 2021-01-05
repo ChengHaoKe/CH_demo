@@ -23,6 +23,7 @@ table {
     border: 0 solid;
     /* to stop table auto-adjusting if row content too long */
     white-space: nowrap;
+    width: 90%;
 }
 
 td {

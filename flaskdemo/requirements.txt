@@ -5,3 +5,4 @@ selenium
 tensorflow
 gunicorn
 pandas
+tabulate

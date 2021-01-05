@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request
 from app import apiclass as apic
+from app import crawlerclass as crawl
 from os.path import join, dirname, realpath
+import pandas as pd
+
 # https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f
 # https://medium.com/@gitaumoses4/deploying-a-flask-application-on-heroku-e509e5c76524
 
@@ -41,16 +44,15 @@ def api():
     return render_template("api.html", image0=sb64)
 
 
-# @app.route('/api/', methods=['POST'])
-# def api_post():
-#     text = request.form['text']
-#     processed_text = text.upper()
-#     return processed_text
-
-
-@app.route("/crawler/")
+@app.route("/crawler/", methods=['GET', 'POST'])
 def crawler():
-    return render_template("crawler.html")
+    # https://stackoverflow.com/questions/52644035/how-to-show-a-pandas-dataframe-into-a-existing-flask-html-table
+    if request.method == 'POST':
+        df1 = crawl.webcrawler().crawler()
+        df2 = df1.to_html(classes='dataframe', header="true")
+    else:
+        df2 = pd.DataFrame(['Click button to crawl!']).to_html(classes='dataframe', header="true")
+    return render_template("crawler.html", tables=[df2])
 
 
 @app.route("/puzzle/")
@@ -71,5 +73,6 @@ def hello_name(name):
 if __name__ == "__main__":
     app.run(debug=True)
     # host='localhost',
-# app.run(debug=True)
+    # app.run(debug=True)
+
 # https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xi-facelift
