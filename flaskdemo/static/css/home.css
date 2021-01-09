@@ -23,17 +23,17 @@ table {
     border: 0 solid;
     /* to stop table auto-adjusting if row content too long */
     white-space: nowrap;
-    width: 90%;
+    /*width: 90%;*/
 }
 
 td {
     padding: 0 10px 0 0;
 }
 
-/* to stop table auto-adjusting width if row content too long */
-td:last-child{
-    width:50%;
-}
+/*!* to stop table auto-adjusting width if row content too long *!*/
+/*td:last-child{*/
+/*    width:50%;*/
+/*}*/
 
 h2 {
     text-align:center;

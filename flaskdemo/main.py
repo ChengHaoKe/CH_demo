@@ -6,6 +6,7 @@ import pandas as pd
 
 # https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f
 # https://medium.com/@gitaumoses4/deploying-a-flask-application-on-heroku-e509e5c76524
+# https://elements.heroku.com/buildpacks/pyronlaboratory/heroku-integrated-firefox-geckodriver
 
 
 app = Flask(__name__)
@@ -49,9 +50,10 @@ def crawler():
     # https://stackoverflow.com/questions/52644035/how-to-show-a-pandas-dataframe-into-a-existing-flask-html-table
     if request.method == 'POST':
         df1 = crawl.webcrawler().crawler()
-        df2 = df1.to_html(classes='dataframe', header="true")
+        df2 = df1.to_html(classes='dataframe', header="true", index=False)
     else:
-        df2 = pd.DataFrame(['Click button to crawl!']).to_html(classes='dataframe', header="true")
+        df1 = pd.DataFrame(['Click button to crawl!'], columns=['Click button to crawl!'])
+        df2 = df1.to_html(classes='dataframe', header="true", index=False)
     return render_template("crawler.html", tables=[df2])
 
 
