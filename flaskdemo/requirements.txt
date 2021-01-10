@@ -2,7 +2,6 @@ requests
 matplotlib
 Flask
 selenium
-tensorflow
 gunicorn
 pandas
 tabulate

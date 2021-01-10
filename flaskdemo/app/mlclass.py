@@ -1,5 +1,7 @@
 import tensorflow as tf
 import os
+# https://stackoverflow.com/questions/61796196/heroku-tensorflow-2-2-1-too-large-for-deployment/62356779#62356779
+# Compiled slug size: 578.7M is too large (max is 500M).
 
 # remove warning for cpu
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
