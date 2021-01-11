@@ -25,7 +25,7 @@ class webcrawler:
         options.headless = True
 
         # for heroku
-        epath = "/usr/local/bin:/usr/bin:/bin:/app/vendor/"
+        epath = "/usr/local/bin:/usr/bin:/bin:/app/vendor/geckodriver"
 
         driver = webdriver.Firefox(firefox_profile=profile, options=options, log_path='/dev/null',
                                    executable_path=epath)
