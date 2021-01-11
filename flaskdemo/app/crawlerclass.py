@@ -7,6 +7,7 @@ from tabulate import tabulate
 
 # https://github.com/pyronlaboratory/heroku-integrated-firefox-geckodriver
 # https://github.com/mozilla/geckodriver/releases
+# https://elements.heroku.com/buildpacks/buitron/firefox-buildpack
 
 
 class webcrawler:
