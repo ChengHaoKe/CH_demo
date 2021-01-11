@@ -23,7 +23,14 @@ class webcrawler:
 
         options = webdriver.FirefoxOptions()
         options.headless = True
-        driver = webdriver.Firefox(firefox_profile=profile, options=options, log_path='/dev/null')
+
+        # for heroku
+        epath = "/usr/local/bin:/usr/bin:/bin:/app/vendor/"
+
+        driver = webdriver.Firefox(firefox_profile=profile, options=options, log_path='/dev/null',
+                                   executable_path=epath)
+        # local
+        # driver = webdriver.Firefox(firefox_profile=profile, options=options, log_path='/dev/null')
         # driver.set_window_size(1390, 850)
         driver.maximize_window()
 
