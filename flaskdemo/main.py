@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from app import apiclass as apic
 from app import crawlerclass as crawl
 from os.path import join, dirname, realpath
@@ -57,9 +57,24 @@ def crawler():
     return render_template("crawler.html", tables=[df2])
 
 
-@app.route("/puzzle/")
-def puzzle():
-    return render_template("puzzle.html")
+@app.route("/d3viz/")
+def d3viz():
+    return render_template("d3viz.html")
+
+
+@app.route("/data")
+def data():
+    # # https://realpython.com/web-development-with-flask-fetching-data-with-requests/#d3
+    # if request.method == 'POST':
+    #     # https://stackoverflow.com/questions/35729693/create-a-json-file-from-a-flask-view-to-be-used-with-d3
+    #     df1 = pd.read_csv('static/data/ch_vsgdata.csv')
+    # else:
+    #     df1 = pd.DataFrame(['Click button to render image!'], columns=['Click button to render image!'])
+    df1 = pd.read_csv(join(dirname(realpath(__file__)), 'static/data/ch_vsgdata.csv'))
+    df1 = df1.to_json(orient="records")
+    # df1 = df1.to_dict('series')
+
+    return jsonify(df1)
 
 
 @app.route("/ml/")

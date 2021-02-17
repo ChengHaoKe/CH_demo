@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
         <!-- Add CSS style sheets-->
-        <link rel="stylesheet" type= "text/css" href="{{url_for('static', filename='css/home.css')}}">
+        <link rel="stylesheet" type= "text/css" href="{{url_for('static', filename='css/d3viz.css')}}">
         <title>
             Flask html test
         </title>
         <!-- Add javascript code -->
-        <script type="text/javascript" src="{{url_for('static', filename='js/home.js')}}">
+        <script type="text/javascript" src="{{url_for('static', filename='js/d3viz.js')}}">
         </script>
     </head>
     <body>
         <button onclick="whitedark()">Toggle dark mode</button>
         <header>
           <div class="container">
-            <h1 class="logo">Mini Puzzles</h1>
+            <h1 class="logo">D3.js</h1>
             <strong><nav>
               <ul class="menu">
                 <li><a href="{{url_for('home')}}">Home</a></li>
@@ -25,5 +26,7 @@
             </nav></strong>
           </div>
         </header>
+        <svg id="graph" width="960" height="500"></svg>
+        <div class="tooltip"></div>
     </body>
 </html>

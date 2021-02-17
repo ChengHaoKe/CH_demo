@@ -1,0 +1,52 @@
+/* for d3.js, separate files for better debugging */
+
+body {
+    width: 99%;
+    background-color: white;
+    color: black;
+}
+
+.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: 45%;
+    width: 10%;
+    height: 10%;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    border: 0 solid;
+    /* to stop table auto-adjusting if row content too long */
+    white-space: nowrap;
+}
+
+td {
+    padding: 0 10px 0 0;
+}
+
+h2 {
+    text-align:center;
+}
+
+.homeheader h1 {
+    float: left;
+}
+
+#image1, #image2 {
+    height: 60%;
+    width: 60%;
+}
+
+#image2 {
+    display: none;
+}
+
+/* d3 part additions*/
+
