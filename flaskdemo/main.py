@@ -70,11 +70,15 @@ def data():
     #     df1 = pd.read_csv('static/data/ch_vsgdata.csv')
     # else:
     #     df1 = pd.DataFrame(['Click button to render image!'], columns=['Click button to render image!'])
-    df1 = pd.read_csv(join(dirname(realpath(__file__)), 'static/data/ch_vsgdata.csv'))
-    df1 = df1.to_json(orient="records")
-    # df1 = df1.to_dict('series')
+    df1 = pd.read_csv(join(dirname(realpath(__file__)), 'static/data/ch_vsgraw.csv'))
+    df2 = df1.groupby(['Topic', 'CharityName', 'CharityCountry', 'ProjDate', 'VolunteerCountry'],
+                      as_index=False).agg({'Volunteer': 'nunique', 'VolunteerCity': 'nunique'})
+    df2.columns = ['Topic', 'CharityName', 'CharityCountry', 'ProjDate', 'VolunteerCountry', 'Volunteers',
+                   'VolunteerCity']
 
-    return jsonify(df1)
+    df2 = df2.to_json(orient="records")
+
+    return jsonify(df2)
 
 
 @app.route("/ml/")

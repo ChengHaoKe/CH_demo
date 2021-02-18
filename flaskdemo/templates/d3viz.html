@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html>
+     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <head>
-        <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
         <!-- Add CSS style sheets-->
         <link rel="stylesheet" type= "text/css" href="{{url_for('static', filename='css/d3viz.css')}}">
         <title>
             Flask html test
         </title>
-        <!-- Add javascript code -->
-        <script type="text/javascript" src="{{url_for('static', filename='js/d3viz.js')}}">
-        </script>
     </head>
     <body>
         <button onclick="whitedark()">Toggle dark mode</button>
@@ -28,5 +25,7 @@
         </header>
         <svg id="graph" width="960" height="500"></svg>
         <div class="tooltip"></div>
+        <!-- Add javascript code, cannot be before svg element... -->
+        <script type="text/javascript" src="{{url_for('static', filename='js/d3viz.js')}}"></script>
     </body>
 </html>

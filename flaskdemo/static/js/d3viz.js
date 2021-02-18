@@ -6,23 +6,23 @@ function whitedark() {
 
 
 // d3 stuff
-var data;
+var data
 
 var svg = d3.select("#graph")
     .attr("width", 960)
-    .attr("height", 500);
+    .attr("height", 500)
 
-var tooltip = d3.select(".tooltip");
+var tooltip = d3.select(".tooltip")
 
 var padding = {
-    top: 110,
+    top: 50,
     right: 20,
-    bottom: 40,
+    bottom: 80,
     left: 75
-};
+}
 
-var width = +svg.attr("width") - padding.left - padding.right;
-var height = +svg.attr("height") - padding.top - padding.bottom;
+var width = +svg.attr("width") - padding.left - padding.right
+var height = +svg.attr("height") - padding.top - padding.bottom
 
 // hold charts
 var g = svg.append("g")
@@ -46,29 +46,12 @@ var y = d3.scaleLinear()
     .rangeRound([height, 0])
 
 function streamParse(d) {
-    console.log(d)
+    // console.log(d)
     return {
         Topic: d.Topic,
         // CharityCountry: d.CharityCountry,
         Volunteers: +d.Volunteers
     }
-}
-
-function initializeChart(error, parsedData) {
-    if (error) {
-        throw error
-    }
-
-    groupby = d3.nest()
-    .key(function(d){return d.Topic; })
-    // .key(function(d) {return d.CharityCountry; })
-    .rollup(function(v) { return d3.sum(v, function(d) { return d.Volunteers; }); })
-    .entries(parsedData)
-    // parsed data is data already processed by the stream function
-
-    data = groupby
-    // console.log(data)
-    drawChart()
 }
 
 function prepScales() {
@@ -89,15 +72,21 @@ function prepScales() {
 }
 
 function drawAxes() {
+    // x axis and rotate labels
     xAxisGroup
         .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("transform", "rotate(-45)")
     yAxisGroup
-        .call(d3.axisLeft(y).ticks(5, "%"))
+        .call(d3.axisLeft(y).ticks(5))
+    // , "%"
 }
 
 function drawBars() {
     var dataBoundToSelection = g.selectAll(".bar")
         .data(data)
+    console.log(data)
     var enteringBars = dataBoundToSelection.enter().append("rect")
 
     console.log(enteringBars)
@@ -107,9 +96,11 @@ function drawBars() {
         .attr("class", "bar")
         .attr("x", function(d) { return x(d.Topic) })
         .attr("y", function(d) { return y(d.Volunteers) })
-        .attr("width", 0)
+        .attr("width", x.bandwidth())
         .attr("height", function(d) { return height - y(d.Volunteers) })
-        .attr("fill", "white")
+        .attr("fill", "steelblue")
+        .on("mousemove", mousemove)
+        .on("mouseout", mouseout)
 }
 
 function drawChart() {
@@ -120,6 +111,60 @@ function drawChart() {
     drawBars()
 }
 
+// tooltip related
+function mouseout(d,i) {
+    tooltip
+        .style("display", "none");
+}
+
+
+function mousemove(d,i) {
+    tooltip
+        .html("Topic:  <b> " + d.Topic + "</b><br>Volunteers: " + d.Volunteers + "</b>")
+        .style("display", "inline-block")
+
+    var w = tooltip.node().offsetWidth/2,
+        h = tooltip.node().offsetHeight*1.1;
+
+    tooltip
+        .style("left", d3.event.pageX - w + "px")
+        .style("top", d3.event.pageY - h + "px");
+}
+
+// title
+g.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 0 - (padding.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "26px")
+        .style("text-decoration", "underline")
+        .text("Volunteers by Topic")
+
+// final function that calls everything
+function initializeChart(error, parsedData) {
+    if (error) {
+        throw error
+    }
+    console.log(parsedData)
+
+    groupby = d3.nest()
+    .key(function(d){return d.Topic; })
+    // .key(function(d) {return d.CharityCountry; })
+    .rollup(function(v) { return d3.sum(v, function(d) { return d.Volunteers; }); })
+    .entries(parsedData)
+    .map(function(group) {
+        return {
+          Topic: group.key,
+          Volunteers: group.value
+        }
+    })
+    // parsed data is data already processed by the stream function
+
+    data = groupby
+    console.log(data)
+    drawChart()
+}
+
 // d3.json("/data", initializeChart)
 d3.json("/data", function(error, data) {
     if (error) {
@@ -127,17 +172,7 @@ d3.json("/data", function(error, data) {
     }
 
     data = JSON.parse(data);
-    console.log(data)
-
-    // var newd = data.forEach(function(d) {
-    //     d = streamParse(d)
-    //     return d
-    // })
-    // var pdata = d3.map(data, function (d) {
-    //     d = streamParse(d)
-    //     return d
-    // })
-    // console.log(pdata)
+    // console.log(data)
 
     data.forEach(function(d) {
         d = streamParse(d)
