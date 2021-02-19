@@ -2,6 +2,14 @@
 function whitedark() {
   var element = document.body;
   element.classList.toggle("dark-mode");
+  var d3col = d3.selectAll("text").attr("fill");
+  if (d3col === "white") {
+      d3.selectAll("text").attr("fill", "black");
+      d3.selectAll(".tooltip").style("background-color", "#ffffff");
+  } else {
+      d3.selectAll("text").attr("fill", "white");
+      d3.selectAll(".tooltip").style("background-color", "black");
+  }
 }
 
 
@@ -101,6 +109,17 @@ function drawBars() {
         .attr("fill", "steelblue")
         .on("mousemove", mousemove)
         .on("mouseout", mouseout)
+
+    // show values
+    g.selectAll("text.bar")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "bar")
+        .attr("text-anchor", "middle")
+        .attr("x", function(d) { return x(d.Topic) + x.bandwidth() / 2; })
+        .attr("y", function(d) { return y(d.Volunteers) - 5; })
+        .text(function(d) { return d.Volunteers; })
 }
 
 function drawChart() {
@@ -137,8 +156,9 @@ g.append("text")
         .attr("y", 0 - (padding.top / 2))
         .attr("text-anchor", "middle")
         .style("font-size", "26px")
-        .style("text-decoration", "underline")
+        // .style("text-decoration", "underline")  // underlines the title
         .text("Volunteers by Topic")
+
 
 // final function that calls everything
 function initializeChart(error, parsedData) {

@@ -4,6 +4,11 @@ body {
     width: 99%;
     background-color: white;
     color: black;
+    padding-bottom: 20px;
+}
+
+p {
+  text-indent: 30px;
 }
 
 .dark-mode {
